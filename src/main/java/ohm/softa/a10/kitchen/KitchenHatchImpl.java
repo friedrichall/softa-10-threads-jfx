@@ -8,7 +8,7 @@ import java.util.Deque;
 public class KitchenHatchImpl implements KitchenHatch{
 	private Integer maxMeals;
 	private Deque<Order> orders;
-	private Deque<Dish> dishes;
+	private Deque<Dish> dishes = null;
 	public KitchenHatchImpl (Integer _maxMeals, Deque<Order> _orders){
 		this.maxMeals = _maxMeals;
 		this.orders = _orders;
@@ -36,13 +36,14 @@ public class KitchenHatchImpl implements KitchenHatch{
 	}
 
 	@Override
-	public void enqueueDish(Dish m) {
+	public void enqueueDish(Dish d) {
 		//if deque is full, adding to deque has to wait
-		dishes.offerLast(m);
+		dishes.offerLast(d);
+
 	}
 
 	@Override
 	public int getDishesCount() {
-		return 0;
+		return this.dishes.size();
 	}
 }

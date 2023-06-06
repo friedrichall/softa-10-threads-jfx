@@ -16,6 +16,8 @@ public class App extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// note: var is the dynamic type; specify template argument b/c compiler can't infer it!
     	var root = FXMLLoader.<Parent>load(getClass().getResource("views/main.fxml"));
+		//FXMLLoader loader = new FXMLLoader(getClass().getResource("views/main.fxml"));
+		//Parent root = loader.load();
     	primaryStage.setTitle("THRO Diner");
     	primaryStage.setScene(new Scene(root, 800, 600));
     	primaryStage.show();
