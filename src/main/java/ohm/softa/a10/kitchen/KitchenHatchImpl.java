@@ -4,14 +4,16 @@ import ohm.softa.a10.model.Dish;
 import ohm.softa.a10.model.Order;
 
 import java.util.Deque;
+import java.util.LinkedList;
 
 public class KitchenHatchImpl implements KitchenHatch{
-	private Integer maxMeals;
-	private Deque<Order> orders;
-	private Deque<Dish> dishes = null;
+	private final Integer maxMeals;
+	private final Deque<Order> orders;
+	private final Deque<Dish> dishes;
 	public KitchenHatchImpl (Integer _maxMeals, Deque<Order> _orders){
 		this.maxMeals = _maxMeals;
 		this.orders = _orders;
+		dishes = new LinkedList<>();
 	}
 
 	@Override
@@ -20,25 +22,44 @@ public class KitchenHatchImpl implements KitchenHatch{
 	}
 
 	@Override
-	public Order dequeueOrder(long timeout) {
+	public synchronized Order dequeueOrder(long timeout){
 		//TODO wait(timeout);
 		return orders.pollFirst();
 	}
 
 	@Override
-	public int getOrderCount() {
+	public synchronized int getOrderCount() {
 		return orders.size();
 	}
 
 	@Override
 	public Dish dequeueDish(long timeout) {
+
+		synchronized (dishes){
+			while (dishes.size() == 0){
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 		return dishes.pollFirst();
 	}
 
 	@Override
 	public void enqueueDish(Dish d) {
 		//if deque is full, adding to deque has to wait
-		dishes.offerLast(d);
+		synchronized (dishes){
+			while (dishes.size() == this.maxMeals){
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			dishes.offerLast(d);
+		}
 
 	}
 
