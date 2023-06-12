@@ -38,7 +38,7 @@ public class KitchenHatchImpl implements KitchenHatch{
 		synchronized (dishes){
 			while (dishes.size() == 0){
 				try {
-					wait();
+					dishes.wait();
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
 				}
@@ -51,9 +51,9 @@ public class KitchenHatchImpl implements KitchenHatch{
 	public void enqueueDish(Dish d) {
 		//if deque is full, adding to deque has to wait
 		synchronized (dishes){
-			while (dishes.size() == this.maxMeals){
+			while (getDishesCount() >= this.maxMeals){
 				try {
-					wait();
+					dishes.wait();
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
 				}
