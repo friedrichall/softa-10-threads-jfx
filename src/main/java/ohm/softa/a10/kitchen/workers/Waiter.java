@@ -29,8 +29,8 @@ public class Waiter implements Runnable{
 			if(d != null){
 				logger.info("Waiter " + name + " picked up dish " + d.getMealName());
 				try {
-					Thread.sleep(rnd.nextInt(1001));
-					logger.info("Waiter" + name + "served dish " + d.getMealName());
+					Thread.sleep(rnd.nextInt(3001));
+					logger.info("Waiter " + name + " served dish " + d.getMealName());
 				} catch (InterruptedException e) {
 					logger.error("Failed to serve dish", e);
 				}
@@ -38,7 +38,7 @@ public class Waiter implements Runnable{
 
 
 			progressReporter.updateProgress();
-		} while (d != null);
+		} while (d != null|| kitchenHatch.getOrderCount() > 0);
 		progressReporter.notifyWaiterLeaving();
 		logger.info("Seems there's nothing to do anymore - {} going home", name);
 	}
